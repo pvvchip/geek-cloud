@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import ru.ppvchip.cloud.common.AbstractMessage;
-import ru.ppvchip.cloud.common.FileMessage;
-import ru.ppvchip.cloud.common.FileRequest;
+import ru.ppvchip.cloud.common.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +22,13 @@ public class MainController implements Initializable {
     TextField tfFileName;
 
     @FXML
-    ListView<String> filesList;
+    TextField sdFileName;
+
+    @FXML
+    ListView<String> filesListClient;
+
+    @FXML
+    ListView<String> filesListServer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -38,6 +42,12 @@ public class MainController implements Initializable {
                         Files.write(Paths.get("storage_client/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalFilesList();
                     }
+                    if (am instanceof FileListSrv) {
+                        FileListSrv fl = (FileListSrv) am;
+                        filesListServer.getItems().clear();
+//                        fl.getList().forEach(o -> filesListServer.getItems().add(o));
+                        for (String str: fl.getList()) filesListServer.getItems().add(str);
+                    }
                 }
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
@@ -47,8 +57,13 @@ public class MainController implements Initializable {
         });
         t.setDaemon(true);
         t.start();
-        filesList.setItems(FXCollections.observableArrayList());
+        filesListClient.setItems(FXCollections.observableArrayList());
         refreshLocalFilesList();
+        refreshServerFilesList();
+    }
+
+    private void refreshServerFilesList() {
+        Network.sendMsg(new FileListSrv(null));
     }
 
     public void pressOnDownloadBtn(ActionEvent actionEvent) {
@@ -58,19 +73,37 @@ public class MainController implements Initializable {
         }
     }
 
+    public void pressOnDownsendBtn(ActionEvent actionEvent) {
+        //FIXME
+        String path = "storage_client/" + sdFileName.getText();
+        if (sdFileName.getLength() > 0 && Files.exists(Paths.get(path))) {
+            FileSend fileSend = null;
+            try {
+                fileSend = new FileSend(Paths.get(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Network.sendMsg(fileSend);
+            sdFileName.clear();
+            refreshServerFilesList();
+        }
+    }
+
     public void refreshLocalFilesList() {
         if (Platform.isFxApplicationThread()) {
             try {
-                filesList.getItems().clear();
-                Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o -> filesList.getItems().add(o));
+                filesListClient.getItems().clear();
+                Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o ->
+                        filesListClient.getItems().add(o));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             Platform.runLater(() -> {
                 try {
-                    filesList.getItems().clear();
-                    Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o -> filesList.getItems().add(o));
+                    filesListClient.getItems().clear();
+                    Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o ->
+                            filesListClient.getItems().add(o));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

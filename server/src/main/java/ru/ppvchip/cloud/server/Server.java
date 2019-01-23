@@ -11,6 +11,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import javafx.application.Platform;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Server {
     private static final int MAX_OBJ_SIZE = 100 * 1024 * 1024;
@@ -47,3 +52,4 @@ public class Server {
         new Server().run();
     }
 }
+

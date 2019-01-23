@@ -1,0 +1,8 @@
+Сделано:
+- добавлены элементы в форму клиента для отображения фалов на сервере
+- реализована загрузка списка фалов с сервера
+- отправка файла
+
+проблема
+Exception in thread "Thread-4" java.lang.IllegalStateException: Not on FX application thread; currentThread = Thread-4
+при обналение ListView для файлов на сервере
