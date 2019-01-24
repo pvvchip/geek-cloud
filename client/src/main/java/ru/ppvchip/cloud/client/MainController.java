@@ -44,9 +44,14 @@ public class MainController implements Initializable {
                     }
                     if (am instanceof FileListSrv) {
                         FileListSrv fl = (FileListSrv) am;
-                        filesListServer.getItems().clear();
-//                        fl.getList().forEach(o -> filesListServer.getItems().add(o));
-                        for (String str: fl.getList()) filesListServer.getItems().add(str);
+                        Platform.runLater(() -> {
+                            try {
+                                filesListServer.getItems().clear();
+                                fl.getList().forEach(o -> filesListServer.getItems().add(o));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
                 }
             } catch (ClassNotFoundException | IOException e) {
@@ -74,7 +79,6 @@ public class MainController implements Initializable {
     }
 
     public void pressOnDownsendBtn(ActionEvent actionEvent) {
-        //FIXME
         String path = "storage_client/" + sdFileName.getText();
         if (sdFileName.getLength() > 0 && Files.exists(Paths.get(path))) {
             FileSend fileSend = null;
@@ -90,7 +94,7 @@ public class MainController implements Initializable {
     }
 
     public void refreshLocalFilesList() {
-        if (Platform.isFxApplicationThread()) {
+        Platform.runLater(() -> {
             try {
                 filesListClient.getItems().clear();
                 Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o ->
@@ -98,16 +102,6 @@ public class MainController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            Platform.runLater(() -> {
-                try {
-                    filesListClient.getItems().clear();
-                    Files.list(Paths.get("storage_client")).map(p -> p.getFileName().toString()).forEach(o ->
-                            filesListClient.getItems().add(o));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+        });
     }
 }
