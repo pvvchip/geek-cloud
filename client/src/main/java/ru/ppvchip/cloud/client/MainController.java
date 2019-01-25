@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import ru.ppvchip.cloud.common.*;
 
 import java.io.IOException;
@@ -103,5 +104,21 @@ public class MainController implements Initializable {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void pressDelBtnServer(ActionEvent actionEvent) {
+
+    }
+
+    public void pressDelBtnClient(ActionEvent actionEvent) {
+
+    }
+
+    public void clickListServer(MouseEvent mouseEvent) {
+        tfFileName.setText(filesListServer.getFocusModel().getFocusedItem());
+    }
+
+    public void clickListClient(MouseEvent mouseEvent) {
+        sdFileName.setText(filesListClient.getFocusModel().getFocusedItem());
     }
 }

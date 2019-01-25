@@ -12,17 +12,19 @@
       xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.ppvchip.cloud.client.MainController">
     <Label text="Server"/>
-    <ListView fx:id="filesListServer" VBox.vgrow="ALWAYS"/>
+    <ListView onMouseClicked="#clickListServer" fx:id="filesListServer" VBox.vgrow="ALWAYS"/>
     <HBox>
         <TextField fx:id="tfFileName" focusTraversable="false"
                    promptText="Укажите имя файла на сервере, который хотите скачать" HBox.hgrow="ALWAYS"/>
         <Button onAction="#pressOnDownloadBtn" prefWidth="90.0" text="Load"/>
+        <Button onAction="#pressDelBtnServer" text="X"/>
     </HBox>
     <HBox>
         <TextField fx:id="sdFileName" focusTraversable="false" promptText="Укажите имя файла, который хотите отправить"
                    HBox.hgrow="ALWAYS"/>
         <Button onAction="#pressOnDownsendBtn" prefWidth="90.0" text="Send"/>
+        <Button onAction="#pressDelBtnClient" text="X"/>
     </HBox>
     <Label text="Client"/>
-    <ListView fx:id="filesListClient" VBox.vgrow="ALWAYS"/>
+    <ListView onMouseClicked="#clickListClient" fx:id="filesListClient" VBox.vgrow="ALWAYS"/>
 </VBox>
