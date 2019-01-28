@@ -1,4 +1,4 @@
-package ru.ppvchip.cloud.client;
+package ru.pvvchip.cloud.client;
 
 
 import javafx.application.Platform;
@@ -9,7 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import ru.ppvchip.cloud.common.*;
+import ru.pvvchip.cloud.common.*;
 
 import java.io.IOException;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package ru.ppvchip.cloud.client;
+package ru.pvvchip.cloud.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

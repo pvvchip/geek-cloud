@@ -1,4 +1,4 @@
-package ru.ppvchip.cloud.common;
+package ru.pvvchip.cloud.common;
 
 import java.io.IOException;
 import java.nio.file.Files;
