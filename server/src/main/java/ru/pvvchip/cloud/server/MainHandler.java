@@ -1,13 +1,9 @@
 package ru.pvvchip.cloud.server;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import ru.pvvchip.cloud.common.FileListSrv;
-import ru.pvvchip.cloud.common.FileMessage;
-import ru.pvvchip.cloud.common.FileRequest;
 import ru.pvvchip.cloud.common.FileSend;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -20,13 +16,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg == null) {
                 return;
             }
-            if (msg instanceof FileRequest) {
-                FileRequest fr = (FileRequest) msg;
-                if (Files.exists(Paths.get("storage_server/" + fr.getFilename()))) {
-                    FileMessage fm = new FileMessage(Paths.get("storage_server/" + fr.getFilename()));
-                    ctx.writeAndFlush(fm);
-                }
-            }
             if (msg instanceof FileListSrv) {
                 ArrayList<String> arrayList = new ArrayList<>();
                 Files.list(Paths.get("storage_server")).map(p -> p.getFileName().toString()).forEach(o ->
@@ -36,9 +25,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             }
             if (msg instanceof FileSend) {
 
-                FileSend fs = (FileSend) msg;
-                Files.write(Paths.get("storage_server/" + fs.getFilename()),
-                        fs.getData(), StandardOpenOption.CREATE);
+                if (((FileSend) msg).getData() != null) {
+                    FileSend fs = (FileSend) msg;
+                    Files.write(Paths.get("storage_server/" + fs.getFilename()),
+                            fs.getData(), StandardOpenOption.CREATE);
+                } else {
+                    ((FileSend) msg).setData(Paths.get("storage_server/" + ((FileSend) msg).getFilename()));
+                    ctx.writeAndFlush(msg);
+                }
             }
         } finally {
             ReferenceCountUtil.release(msg);

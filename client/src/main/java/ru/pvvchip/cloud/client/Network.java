@@ -3,7 +3,6 @@ package ru.pvvchip.cloud.client;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import ru.pvvchip.cloud.common.AbstractMessage;
-
 import java.io.IOException;
 import java.net.Socket;
 

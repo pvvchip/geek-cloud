@@ -13,6 +13,11 @@ public class FileSend extends AbstractMessage {
         data = Files.readAllBytes(path);
     }
 
+    public FileSend(String filename) {
+        this.filename = filename;
+        data = null;
+    }
+
 
     public String getFilename() {
         return filename;
@@ -20,5 +25,13 @@ public class FileSend extends AbstractMessage {
 
     public byte[] getData() {
         return data;
+    }
+
+    public void setData(Path path) {
+        try {
+            this.data = Files.readAllBytes(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

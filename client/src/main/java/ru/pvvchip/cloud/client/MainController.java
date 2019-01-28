@@ -1,6 +1,4 @@
 package ru.pvvchip.cloud.client;
-
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -10,7 +8,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import ru.pvvchip.cloud.common.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -38,9 +35,10 @@ public class MainController implements Initializable {
             try {
                 while (true) {
                     AbstractMessage am = Network.readObject();
-                    if (am instanceof FileMessage) {
-                        FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get("storage_client/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
+                    if (am instanceof FileSend) {
+                        FileSend fs = (FileSend) am;
+                        Files.write(Paths.get("storage_client/" + fs.getFilename()),
+                                fs.getData(), StandardOpenOption.CREATE);
                         refreshLocalFilesList();
                     }
                     if (am instanceof FileListSrv) {
@@ -73,8 +71,9 @@ public class MainController implements Initializable {
     }
 
     public void pressOnDownloadBtn(ActionEvent actionEvent) {
+
         if (tfFileName.getLength() > 0) {
-            Network.sendMsg(new FileRequest(tfFileName.getText()));
+            Network.sendMsg(new FileSend(tfFileName.getText()));
             tfFileName.clear();
         }
     }
