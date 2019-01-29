@@ -2,6 +2,7 @@ package ru.pvvchip.cloud.server;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import ru.pvvchip.cloud.common.FileDel;
 import ru.pvvchip.cloud.common.FileListSrv;
 import ru.pvvchip.cloud.common.FileSend;
 import java.nio.file.Files;
@@ -33,6 +34,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                     ((FileSend) msg).setData(Paths.get("storage_server/" + ((FileSend) msg).getFilename()));
                     ctx.writeAndFlush(msg);
                 }
+            }
+            if (msg instanceof FileDel) {
+                String nameFile = ((FileDel) msg).getName();
+                Files.delete(Paths.get("storage_server/" + nameFile));
             }
         } finally {
             ReferenceCountUtil.release(msg);

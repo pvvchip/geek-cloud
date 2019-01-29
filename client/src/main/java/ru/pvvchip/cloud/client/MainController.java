@@ -1,4 +1,5 @@
 package ru.pvvchip.cloud.client;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -8,12 +9,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import ru.pvvchip.cloud.common.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class MainController implements Initializable {
     @FXML
@@ -106,11 +109,29 @@ public class MainController implements Initializable {
     }
 
     public void pressDelBtnServer(ActionEvent actionEvent) {
-
+        boolean st = filesListServer
+                .getItems()
+                .stream()
+                .anyMatch(s -> s.equals(tfFileName.getText()));
+        if (tfFileName.getLength() > 0 && st) {
+            FileDel fileDel = new FileDel(tfFileName.getText());
+            Network.sendMsg(fileDel);
+            tfFileName.clear();
+            refreshServerFilesList();
+        }
     }
 
     public void pressDelBtnClient(ActionEvent actionEvent) {
-
+        String path = "storage_client/" + sdFileName.getText();
+        if (sdFileName.getLength() > 0 && Files.exists(Paths.get(path))) {
+            try {
+                Files.delete(Paths.get(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            sdFileName.clear();
+            refreshLocalFilesList();
+        }
     }
 
     public void clickListServer(MouseEvent mouseEvent) {
