@@ -18,6 +18,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import static ru.pvvchip.cloud.client.Client.lg;
+import static ru.pvvchip.cloud.client.Client.pw;
+
 public class MainController implements Initializable {
     @FXML
     TextField tfFileName;
@@ -70,7 +73,10 @@ public class MainController implements Initializable {
     }
 
     private void refreshServerFilesList() {
-        Network.sendMsg(new FileListSrv(null));
+        FileListSrv fls = new FileListSrv(null, lg, pw);
+        System.out.println(fls.getLg());
+        System.out.println(fls.getPw());
+        Network.sendMsg(fls);
     }
 
     public void pressOnDownloadBtn(ActionEvent actionEvent) {

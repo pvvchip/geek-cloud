@@ -1,10 +1,12 @@
 package ru.pvvchip.cloud.server;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import ru.pvvchip.cloud.common.FileDel;
 import ru.pvvchip.cloud.common.FileListSrv;
 import ru.pvvchip.cloud.common.FileSend;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -21,8 +23,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 ArrayList<String> arrayList = new ArrayList<>();
                 Files.list(Paths.get("storage_server")).map(p -> p.getFileName().toString()).forEach(o ->
                         arrayList.add(o));
-                FileListSrv fileList = new FileListSrv(arrayList);
+                FileListSrv fileList = new FileListSrv(arrayList, "0", "0");
                 ctx.writeAndFlush(fileList);
+
+                System.out.println(((FileListSrv) msg).getLg());
+                System.out.println(((FileListSrv) msg).getPw());
             }
             if (msg instanceof FileSend) {
 
