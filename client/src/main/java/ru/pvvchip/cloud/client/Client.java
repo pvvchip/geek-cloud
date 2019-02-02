@@ -26,6 +26,7 @@ public class Client extends Application {
         int rnd = new Random().nextInt(3) + 1;
         lg = String.valueOf(rnd);
         pw = "1" + lg;
+
         launch(args);
     }
 }

@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +23,10 @@ import static ru.pvvchip.cloud.client.Client.lg;
 import static ru.pvvchip.cloud.client.Client.pw;
 
 public class MainController implements Initializable {
+
+    @FXML
+    Label lbServer;
+
     @FXML
     TextField tfFileName;
 
@@ -37,6 +42,9 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Network.start();
+
+        lbServer.setText("Server id: " + lg + " pw: " + pw);
+
         Thread t = new Thread(() -> {
             try {
                 while (true) {
@@ -73,6 +81,7 @@ public class MainController implements Initializable {
     }
 
     private void refreshServerFilesList() {
+        // FIX
         FileListSrv fls = new FileListSrv(null, lg, pw);
         System.out.println(fls.getLg());
         System.out.println(fls.getPw());
@@ -82,7 +91,7 @@ public class MainController implements Initializable {
     public void pressOnDownloadBtn(ActionEvent actionEvent) {
 
         if (tfFileName.getLength() > 0) {
-            Network.sendMsg(new FileSend(tfFileName.getText()));
+            Network.sendMsg(new FileSend(tfFileName.getText(), lg, pw));
             tfFileName.clear();
         }
     }
@@ -92,7 +101,7 @@ public class MainController implements Initializable {
         if (sdFileName.getLength() > 0 && Files.exists(Paths.get(path))) {
             FileSend fileSend = null;
             try {
-                fileSend = new FileSend(Paths.get(path));
+                fileSend = new FileSend(Paths.get(path), lg, pw);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -120,7 +129,7 @@ public class MainController implements Initializable {
                 .stream()
                 .anyMatch(s -> s.equals(tfFileName.getText()));
         if (tfFileName.getLength() > 0 && st) {
-            FileDel fileDel = new FileDel(tfFileName.getText());
+            FileDel fileDel = new FileDel(tfFileName.getText(), lg, pw);
             Network.sendMsg(fileDel);
             tfFileName.clear();
             refreshServerFilesList();

@@ -8,12 +8,14 @@ public class FileSend extends AbstractMessage {
     private String filename;
     private byte[] data;
 
-    public FileSend(Path path) throws IOException {
+    public FileSend(Path path, String lg, String pw) throws IOException {
+        super(lg, pw);
         filename = path.getFileName().toString();
         data = Files.readAllBytes(path);
     }
 
-    public FileSend(String filename) {
+    public FileSend(String filename, String lg, String pw) {
+        super(lg, pw);
         this.filename = filename;
         data = null;
     }

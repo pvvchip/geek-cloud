@@ -11,7 +11,7 @@
       style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);"
       xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.pvvchip.cloud.client.MainController">
-    <Label text="Server"/>
+    <Label fx:id="lbServer" text="Server"/>
     <ListView onMouseClicked="#clickListServer" fx:id="filesListServer" VBox.vgrow="ALWAYS"/>
     <HBox>
         <TextField fx:id="tfFileName" focusTraversable="false"
