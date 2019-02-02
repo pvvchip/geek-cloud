@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
@@ -23,6 +24,12 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg == null) {
                 return;
             }
+
+            if (!isUser((AbstractMessage) msg)) {
+                System.out.println("not User");
+                return;
+            }
+
             if (msg instanceof FileListSrv) {
                 dir = "storage_server/" + ((AbstractMessage) msg).getLg();
                 isDir(dir);
@@ -60,6 +67,30 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         } finally {
             ReferenceCountUtil.release(msg);
         }
+    }
+
+    private boolean isUser(AbstractMessage msg) throws ClassNotFoundException, SQLException {
+
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:db_server/users.db");
+        Statement stat = con.createStatement();
+        ResultSet resSet = stat.executeQuery("SELECT * FROM account where name=" + msg.getLg());
+
+        boolean isName, isPW;
+
+        try {
+            isName = resSet.getString(1).equals(((AbstractMessage) msg).getLg());
+            isPW = resSet.getString(2).equals(((AbstractMessage) msg).getPw());
+
+            return isName && isPW;
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+            return false;
+        } finally {
+            con.close();
+        }
+
     }
 
     private void isDir(String dir) {
